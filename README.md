@@ -1,7 +1,7 @@
 # git_bash
 
 <p align="center">
-  <img src="https://github.com/CultureLinux/git_bash/blob/main/docs/git_completion.png" alt="git_bash"/>
+  <img src="https://github.com/CultureLinux/git_bash/blob/main/docs/git_completion.png" alt="git_bash" style="width: 50%; max-width: 400px;"/>
 </p>
 
 Ce script Bash/Zsh fournit une **autocomplétion personnalisée** pour l'alias `g.c` qui execute `git add . && git commit -m `, afin de faciliter la saisie des messages de commit avec emojis et types prédéfinis (feat, fix, docs, etc.).
