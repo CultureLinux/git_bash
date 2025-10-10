@@ -15,6 +15,7 @@ _gc_completion() {
         "📦 build: "
         "🔧 config: "
         "💚 ci: "
+        "🧱 data: "
         "📝 docs: "
         "✨ feature: "
         "🐛 fix: "
