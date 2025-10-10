@@ -27,7 +27,7 @@ Il ajoute automatiquement un guillemet ouvrant `"` en début de message pour pr�
 Exécute le oneliner suivant (il détecte Bash ou Zsh, ajoute la ligne de `source` dans le fichier de configuration et recharge la shell) :
 
 ```bash
-cp .git_completion ~/.gc_completion && \
+cp .git_completion ~/.git_completion && \
 if [ -n "$ZSH_VERSION" ]; then \
     SHELL_RC=~/.zshrc; \
 elif [ -n "$BASH_VERSION" ]; then \
@@ -35,8 +35,8 @@ elif [ -n "$BASH_VERSION" ]; then \
 else \
     echo "Shell non supporté"; exit 1; \
 fi && \
-grep -qxF "source ~/.gc_completion" "$SHELL_RC" || \
-echo "source ~/.gc_completion" >> "$SHELL_RC" && \
+grep -qxF "source ~/.git_completion" "$SHELL_RC" || \
+echo "source ~/.git_completion" >> "$SHELL_RC" && \
 source "$SHELL_RC"
 ```
 
@@ -45,7 +45,7 @@ source "$SHELL_RC"
 Ajout l'autocomplétion pour tous les utilisateurs du système.
 
 ```bash
-GC_FILE="/etc/bash_completion.d/gc_completion"
+GC_FILE="/etc/bash_completion.d/git_completion"
 sudo cp .git_completion "$GC_FILE"
 sudo chmod 644 "$GC_FILE"
 

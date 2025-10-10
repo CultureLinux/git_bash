@@ -1,5 +1,5 @@
 # Override 
-alias g.c='git add . -A && gc'
+alias g.c='git add . -A && git commit -m'
 
 # Fonction de complétion personnalisée pour g.c
 _gc_completion() {
