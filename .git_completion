@@ -1,5 +1,17 @@
 # Override 
+alias gs='git status'
+alias g.='git add . -A'
 alias g.c='git add . -A && git commit -m'
+alias gba='git branch -a'
+alias gc='git commit -m'
+alias gcout='git checkout'
+alias gdu='git diff @{upstream}'
+alias gfd='git fetch --dry-run'
+alias glog='git log --stat --pretty=short --graph'
+alias glr='git remote -v'
+alias glt='git tag'
+
+
 
 # Fonction de complétion personnalisée pour g.c
 _gc_completion() {

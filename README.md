@@ -12,6 +12,7 @@ Il ajoute automatiquement un guillemet ouvrant `"` en début de message pour pr�
 
 ## Fonctionnalités
 
+- Ajout de plusieurs alias pour faciliter git en ligne de commande
 - Complétion des types de commit les plus courants avec emojis :
   - ✨ feat, 🐛 fix, 📝 docs, 💄 style, ♻️ refactor, ✅ test, 🔧 chore, ⚡ perf, etc.
 - Tri alphabétique des suggestions pour retrouver rapidement le type souhaité.
