@@ -1,0 +1,74 @@
+# Fonction de complétion personnalisée pour g.c
+_gc_completion() {
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD-1]}"
+    
+    # Reconstruit la ligne complète (sans g.c)
+    local full_line="${COMP_WORDS[@]:1}"
+    full_line="${full_line% *}"  # Enlève le dernier mot incomplet
+    
+    # Liste de suggestions de messages de commit avec emojis
+    local suggestions=(
+        "\"✨ feat: "
+        "🐛 fix: "
+        "📝 docs: "
+        "💄 style: "
+        "♻️ refactor: "
+        "✅ test: "
+        "🔧 chore: "
+        "⚡ perf: "
+        "👷 ci: "
+        "📦 build: "
+        "⏪ revert: "
+        "🚧 wip: "
+        "\"🎉 init"
+        "⬆️ update"
+        "✏️ typo"
+        "✅ tests"
+        "📝 update"
+        "🔥 remove"
+        "🚀 Deploy"
+        "🎨 improve"
+        "💚 ci"
+        "🔒 security"
+        "⚙️ config"
+    )
+    
+    # Si on est au premier mot (juste après g.c)
+    if [[ $COMP_CWORD -eq 1 ]]; then
+        local matches=()
+        for suggestion in "${suggestions[@]}"; do
+            local text_only="${suggestion#* }"
+            if [[ "$text_only" == "$cur"* ]]; then
+                matches+=("$suggestion")
+            fi
+        done
+        COMPREPLY=("${matches[@]}")
+    # Si on a déjà commencé à taper (plusieurs mots)
+    else
+        # Reconstruit tout ce qui a été tapé jusqu'ici
+        local typed=""
+        for ((i=1; i<COMP_CWORD; i++)); do
+            typed+="${COMP_WORDS[i]} "
+        done
+        typed+="$cur"
+        
+        local matches=()
+        for suggestion in "${suggestions[@]}"; do
+            if [[ "$suggestion" == "$typed"* ]]; then
+                # Retourne seulement la partie manquante
+                matches+=("${suggestion}")
+            fi
+        done
+        
+        # Si aucune correspondance exacte, désactive la complétion
+        if [[ ${#matches[@]} -eq 0 ]]; then
+            COMPREPLY=()
+        else
+            COMPREPLY=("${matches[@]}")
+        fi
+    fi
+}
+
+# Associe la fonction de complétion à votre alias
+complete -o nospace -F _gc_completion g.c
