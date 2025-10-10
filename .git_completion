@@ -7,31 +7,27 @@ _gc_completion() {
     local full_line="${COMP_WORDS[@]:1}"
     full_line="${full_line% *}"  # Enlève le dernier mot incomplet
     
-    # Liste de suggestions de messages de commit avec emojis
+    # Liste de suggestions de messages de commit avec emojis (tri alphabétique sur le texte)
     local suggestions=(
-        "\"✨ feat: "
-        "\"🐛 fix: "
-        "\"📝 docs: "
-        "\"💄 style: "
-        "\"♻️ refactor: "
-        "\"✅ test: "
-        "\"🔧 chore: "
-        "\"⚡ perf: "
-        "\"👷 ci: "
-        "\"📦 build: "
-        "\"⏪ revert: "
-        "\"🚧 wip: "
-        "\"🎉 init"
-        "\"⬆️ update"
-        "\"✏️ typo"
-        "\"✅ tests"
-        "\"📝 update"
-        "\"🔥 remove"
-        "\"🚀 Deploy"
-        "\"🎨 improve"
-        "\"💚 ci"
-        "\"🔒 security"
-        "\"⚙️ config"
+        "📦 build: "
+        "🔧 chore: "
+        "💚 ci: "
+        "📝 docs: "
+        "✨ feature: "
+        "🐛 fix: "
+        "🎨 improve: "
+        "🎉 init: "
+        "⚡ perf: "
+        "🔥 remove: "
+        "♻️ refactor: "
+        "⏪ revert: "
+        "🔒 security: "
+        "💄 style: "
+        "✏️ typo: "
+        "✅ test: "
+        "🚀 deploy: "
+        "⬆️ update: "
+        "🚧 wip: "
     )
     
     # Si on est au premier mot (juste après g.c)
@@ -43,7 +39,7 @@ _gc_completion() {
                 matches+=("$suggestion")
             fi
         done
-        COMPREPLY=("${matches[@]}")
+        COMPREPLY=("\"${matches[@]}")
     # Si on a déjà commencé à taper (plusieurs mots)
     else
         # Reconstruit tout ce qui a été tapé jusqu'ici
