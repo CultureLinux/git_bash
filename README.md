@@ -18,7 +18,7 @@ Il ajoute automatiquement un guillemet ouvrant `"` en début de message pour pr�
 
 ## Installation
 
-### Copier le fichier de complétion et activer automatiquement
+### Utilisateur
 
 Exécute le oneliner suivant (il détecte Bash ou Zsh, ajoute la ligne de `source` dans le fichier de configuration et recharge la shell) :
 
@@ -34,4 +34,24 @@ fi && \
 grep -qxF "source ~/.gc_completion" "$SHELL_RC" || \
 echo "source ~/.gc_completion" >> "$SHELL_RC" && \
 source "$SHELL_RC"
+```
+
+### Système
+
+Ajout l'autocomplétion pour tous les utilisateurs du système.
+
+```bash
+GC_FILE="/etc/bash_completion.d/gc_completion"
+sudo cp .git_completion "$GC_FILE"
+sudo chmod 644 "$GC_FILE"
+
+if [ -f /etc/bash.bashrc ]; then
+    SHELL_RC="/etc/bash.bashrc"
+elif [ -f /etc/bashrc ]; then
+    SHELL_RC="/etc/bashrc"
+else
+    echo "Aucun bashrc système trouvé"; exit 1
+fi
+
+grep -qxF "source $GC_FILE" "$SHELL_RC" || echo "source $GC_FILE" >> "$SHELL_RC"
 ```
