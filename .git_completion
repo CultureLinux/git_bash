@@ -1,3 +1,6 @@
+# Override 
+alias g.c='git add . -A && gc'
+
 # Fonction de complétion personnalisée pour g.c
 _gc_completion() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
