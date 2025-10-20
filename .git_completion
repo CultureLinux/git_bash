@@ -44,6 +44,10 @@ _gc_completion() {
         "🚀 deploy: "
         "⬆️ update: "
         "🚧 wip: "
+        "🔨 chore: "
+        "🛠 hotfix: "
+        "🌐 i18n: "
+        "📈 benchmark: "
     )
     
     # Si on est au premier mot (juste après g.c)
