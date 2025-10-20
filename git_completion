@@ -44,6 +44,10 @@ _gc_completion() {
         "🚀 deploy: "
         "⬆️ update: "
         "🚧 wip: "
+        "🔨 chore: "
+        "🛠 hotfix: "
+        "🌐 i18n: "
+        "📈 benchmark: "
     )
     
     # Si on est au premier mot (juste après g.c)
@@ -84,3 +88,4 @@ _gc_completion() {
 
 # Associe la fonction de complétion à votre alias
 complete -o nospace -F _gc_completion g.c
+complete -o nospace -F _gc_completion gc

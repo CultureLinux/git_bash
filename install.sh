@@ -6,18 +6,23 @@ GREEN="\033[0;32m"
 RED="\033[0;31m"
 NC="\033[0m"
 
+# === CONFIG ===
+BASE_DIR="$HOME/.git_bash"
+mkdir -p "$BASE_DIR"
+
 REPO="CultureLinux/git_bash"
 RAW_URL="https://raw.githubusercontent.com/${REPO}/main"
-INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/${REPO}/main/install.sh"
-LOCAL_VERSION_FILE="$HOME/.git_completion_version"
-UPDATE_SCRIPT="$HOME/.git_completion_update.sh"
+INSTALL_SCRIPT_URL="${RAW_URL}/install.sh"
+LOCAL_VERSION_FILE="$BASE_DIR/git_completion_version"
+UPDATE_SCRIPT="$BASE_DIR/update.sh"
+GIT_COMPLETION="$BASE_DIR/git_completion"
 
 echo -e "${GREEN}==> Installation ou mise à jour de l'autocomplétion Git...${NC}"
 
-# Téléchargement du .git_completion
+# Téléchargement du git_completion
 TMP_FILE=$(mktemp)
-wget -qO "$TMP_FILE" "${RAW_URL}/.git_completion"
-cp "$TMP_FILE" ~/.git_completion
+wget -qO "$TMP_FILE" "${RAW_URL}/git_completion"
+cp "$TMP_FILE" "$GIT_COMPLETION"
 rm -f "$TMP_FILE"
 
 # Détection du shell
@@ -31,9 +36,9 @@ else
 fi
 
 # Ajout du sourcing si absent
-if ! grep -qxF "source ~/.git_completion" "$SHELL_RC"; then
-    echo "source ~/.git_completion" >> "$SHELL_RC"
-    echo -e "${GREEN}Ajout de 'source ~/.git_completion' dans $SHELL_RC${NC}"
+if ! grep -qxF "source $GIT_COMPLETION" "$SHELL_RC"; then
+    echo "source $GIT_COMPLETION" >> "$SHELL_RC"
+    echo -e "${GREEN}Ajout de 'source $GIT_COMPLETION' dans $SHELL_RC${NC}"
 else
     echo -e "${GREEN}La ligne existe déjà dans $SHELL_RC${NC}"
 fi
@@ -49,37 +54,8 @@ fi
 echo "$LATEST_VERSION" > "$LOCAL_VERSION_FILE"
 echo -e "${GREEN}Version locale mise à jour : ${LATEST_VERSION}${NC}"
 
-# --- Création du script d'auto-update ---
-cat > "$UPDATE_SCRIPT" <<EOF
-#!/usr/bin/env bash
-set -euo pipefail
-
-REPO="${REPO}"
-RAW_URL="https://raw.githubusercontent.com/\${REPO}/main"
-INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/\${REPO}/main/install.sh"
-LOCAL_VERSION_FILE="\$HOME/.git_completion_version"
-
-# Récupère la version locale
-if [ -f "\$LOCAL_VERSION_FILE" ]; then
-    LOCAL_VERSION=\$(cat "\$LOCAL_VERSION_FILE")
-else
-    LOCAL_VERSION="none"
-fi
-
-# Récupère la dernière release GitHub
-LATEST_VERSION=\$(curl -fsSL "https://api.github.com/repos/\${REPO}/releases/latest" \
-    | grep -Po '"tag_name":\\s*"\K[^"]+' || echo "unknown")
-
-# Si nouvelle version → met à jour automatiquement
-if [ "\$LATEST_VERSION" != "unknown" ] && [ "\$LATEST_VERSION" != "\$LOCAL_VERSION" ]; then
-    echo "🆕 Nouvelle version détectée : \$LATEST_VERSION (actuelle : \$LOCAL_VERSION)"
-    echo "⚙️  Mise à jour en cours..."
-    wget -qO- "\$INSTALL_SCRIPT_URL" | bash
-    echo "\$LATEST_VERSION" > "\$LOCAL_VERSION_FILE"
-    echo "✅ Mise à jour terminée vers \$LATEST_VERSION"
-fi
-EOF
-
+# --- Récupération du script d'auto-update ---
+wget -qO "$UPDATE_SCRIPT" "${RAW_URL}/update.sh"
 chmod +x "$UPDATE_SCRIPT"
 
 # --- Ajout au shell RC ---
