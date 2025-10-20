@@ -88,3 +88,4 @@ _gc_completion() {
 
 # Associe la fonction de complétion à votre alias
 complete -o nospace -F _gc_completion g.c
+complete -o nospace -F _gc_completion gc
