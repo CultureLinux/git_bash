@@ -9,7 +9,7 @@ mkdir -p "$BASE_DIR"
 RAW_URL="https://raw.githubusercontent.com/${REPO}/main"
 INSTALL_SCRIPT_URL="${RAW_URL}/install.sh"
 UPDATE_SCRIPT="$BASE_DIR/update.sh"
-LOCAL_VERSION_FILE="$BASE_DIR/.git_completion_version"
+LOCAL_VERSION_FILE="$BASE_DIR/git_completion_version"
 
 # === Récupération de la version locale ===
 if [ -f "$LOCAL_VERSION_FILE" ]; then
