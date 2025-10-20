@@ -65,7 +65,7 @@ EOF
 
 chmod +x ~/.git_completion_update.sh
 
-echo -e "${GREEN} Ajout de l'auto update  ${NC}"
+echo -e "${GREEN}Ajout de l'auto-update  ${NC}"
 
 # Vérification automatique à l'ouverture de session
 if ! grep -qxF "~/.git_completion_update.sh" "$SHELL_RC"; then
@@ -77,3 +77,4 @@ fi
 CURRENT_VERSION=$(curl -fsSL "https://api.github.com/repos/CultureLinux/git_bash/releases/latest" \
     | grep -Po '"tag_name":\s*"\K[^"]+' || echo "dev")
 echo "$CURRENT_VERSION" > ~/.git_completion_version
+
