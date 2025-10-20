@@ -7,8 +7,8 @@ RED="\033[0;31m"
 NC="\033[0m"
 
 REPO="CultureLinux/git_bash"
-RAW_URL="https://raw.githubusercontent.com/${REPO}/develop"
-INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/${REPO}/develop/scripts/install.sh"
+RAW_URL="https://raw.githubusercontent.com/${REPO}/main"
+INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/${REPO}/main/install.sh"
 LOCAL_VERSION_FILE="$HOME/.git_completion_version"
 UPDATE_SCRIPT="$HOME/.git_completion_update.sh"
 
@@ -55,8 +55,8 @@ cat > "$UPDATE_SCRIPT" <<EOF
 set -euo pipefail
 
 REPO="${REPO}"
-RAW_URL="https://raw.githubusercontent.com/\${REPO}/develop"
-INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/\${REPO}/develop/scripts/install.sh"
+RAW_URL="https://raw.githubusercontent.com/\${REPO}/main"
+INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/\${REPO}/main/install.sh"
 LOCAL_VERSION_FILE="\$HOME/.git_completion_version"
 
 # Récupère la version locale
