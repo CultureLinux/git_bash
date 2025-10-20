@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Couleurs
 GREEN="\033[0;32m"
 RED="\033[0;31m"
 NC="\033[0m"
 
-echo -e "${GREEN}==> Installation de l'autocomplétion Git et des alias...${NC}"
+REPO="CultureLinux/git_bash"
+RAW_URL="https://raw.githubusercontent.com/${REPO}/develop"
+INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/${REPO}/develop/scripts/install.sh"
+LOCAL_VERSION_FILE="$HOME/.git_completion_version"
+UPDATE_SCRIPT="$HOME/.git_completion_update.sh"
 
+echo -e "${GREEN}==> Installation ou mise à jour de l'autocomplétion Git...${NC}"
+
+# Téléchargement du .git_completion
 TMP_FILE=$(mktemp)
-wget -qO "$TMP_FILE" "https://raw.githubusercontent.com/CultureLinux/git_bash/develop/.git_completion"
-
-# Copie vers le home
+wget -qO "$TMP_FILE" "${RAW_URL}/.git_completion"
 cp "$TMP_FILE" ~/.git_completion
 rm -f "$TMP_FILE"
 
@@ -32,49 +38,54 @@ else
     echo -e "${GREEN}La ligne existe déjà dans $SHELL_RC${NC}"
 fi
 
-# Recharge du shell
-# On ne source pas ici pour éviter les comportements étranges via pipe bash
-echo -e "${GREEN}Installation terminée ! Redémarre ton terminal pour activer l'autocomplétion. ${NC}"
+# Récupération de la dernière version publiée
+LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
+    | grep -Po '"tag_name":\s*"\K[^"]+' || echo "dev")
 
-echo -e "${GREEN}Création de l'autoupdate ${NC}"
+if [ -z "$LATEST_VERSION" ]; then
+    LATEST_VERSION="dev"
+fi
 
-# Création du script de vérification automatique
-cat > ~/.git_completion_update.sh <<'EOF'
+echo "$LATEST_VERSION" > "$LOCAL_VERSION_FILE"
+echo -e "${GREEN}Version locale mise à jour : ${LATEST_VERSION}${NC}"
+
+# --- Création du script d'auto-update ---
+cat > "$UPDATE_SCRIPT" <<EOF
 #!/usr/bin/env bash
+set -euo pipefail
 
-REPO="CultureLinux/git_bash"
-LOCAL_VERSION_FILE="$HOME/.git_completion_version"
+REPO="${REPO}"
+RAW_URL="https://raw.githubusercontent.com/\${REPO}/develop"
+INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/\${REPO}/develop/scripts/install.sh"
+LOCAL_VERSION_FILE="\$HOME/.git_completion_version"
 
-# Récupère la version locale (ou vide)
-if [ -f "$LOCAL_VERSION_FILE" ]; then
-    LOCAL_VERSION=$(cat "$LOCAL_VERSION_FILE")
+# Récupère la version locale
+if [ -f "\$LOCAL_VERSION_FILE" ]; then
+    LOCAL_VERSION=\$(cat "\$LOCAL_VERSION_FILE")
 else
     LOCAL_VERSION="none"
 fi
 
-# Récupère la dernière release via GitHub API
-LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
-    | grep -Po '"tag_name":\s*"\K[^"]+' || echo "unknown")
+# Récupère la dernière release GitHub
+LATEST_VERSION=\$(curl -fsSL "https://api.github.com/repos/\${REPO}/releases/latest" \
+    | grep -Po '"tag_name":\\s*"\K[^"]+' || echo "unknown")
 
-# Compare et avertit si nouvelle version
-if [ "$LATEST_VERSION" != "unknown" ] && [ "$LATEST_VERSION" != "$LOCAL_VERSION" ]; then
-    echo "🆕 Nouvelle version de git-completion dispo : ${LATEST_VERSION} (actuelle : ${LOCAL_VERSION})"
-    echo "👉 Mets à jour avec : wget -qO- https://raw.githubusercontent.com/${REPO}/main/scripts/install.sh | bash"
+# Si nouvelle version → met à jour automatiquement
+if [ "\$LATEST_VERSION" != "unknown" ] && [ "\$LATEST_VERSION" != "\$LOCAL_VERSION" ]; then
+    echo "🆕 Nouvelle version détectée : \$LATEST_VERSION (actuelle : \$LOCAL_VERSION)"
+    echo "⚙️  Mise à jour en cours..."
+    wget -qO- "\$INSTALL_SCRIPT_URL" | bash
+    echo "\$LATEST_VERSION" > "\$LOCAL_VERSION_FILE"
+    echo "✅ Mise à jour terminée vers \$LATEST_VERSION"
 fi
 EOF
 
-chmod +x ~/.git_completion_update.sh
+chmod +x "$UPDATE_SCRIPT"
 
-echo -e "${GREEN}Ajout de l'auto-update  ${NC}"
-
-# Vérification automatique à l'ouverture de session
-if ! grep -qxF "~/.git_completion_update.sh" "$SHELL_RC"; then
-    echo "~/.git_completion_update.sh" >> "$SHELL_RC"
+# --- Ajout au shell RC ---
+if ! grep -qxF "$UPDATE_SCRIPT" "$SHELL_RC"; then
+    echo "$UPDATE_SCRIPT" >> "$SHELL_RC"
     echo -e "${GREEN}Ajout de la vérification de mise à jour à l'ouverture de session${NC}"
 fi
 
-# Écrit la version actuelle (si tag ou défaut)
-CURRENT_VERSION=$(curl -fsSL "https://api.github.com/repos/CultureLinux/git_bash/releases/latest" \
-    | grep -Po '"tag_name":\s*"\K[^"]+' || echo "dev")
-echo "$CURRENT_VERSION" > ~/.git_completion_version
-
+echo -e "${GREEN}✅ Installation terminée ! Redémarre ton terminal pour activer l'autocomplétion.${NC}"
