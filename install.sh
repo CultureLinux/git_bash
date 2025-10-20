@@ -34,4 +34,46 @@ fi
 
 # Recharge du shell
 # On ne source pas ici pour éviter les comportements étranges via pipe bash
-echo -e "${GREEN}Installation terminée ! Redémarre ton terminal pour activer l'autocomplétion avec `. ~/.git_completion` ${NC}"
+echo -e "${GREEN}Installation terminée ! Redémarre ton terminal pour activer l'autocomplétion. ${NC}"
+
+echo -e "${GREEN}Création de l'autoupdate ${NC}"
+
+# Création du script de vérification automatique
+cat > ~/.git_completion_update.sh <<'EOF'
+#!/usr/bin/env bash
+
+REPO="CultureLinux/git_bash"
+LOCAL_VERSION_FILE="$HOME/.git_completion_version"
+
+# Récupère la version locale (ou vide)
+if [ -f "$LOCAL_VERSION_FILE" ]; then
+    LOCAL_VERSION=$(cat "$LOCAL_VERSION_FILE")
+else
+    LOCAL_VERSION="none"
+fi
+
+# Récupère la dernière release via GitHub API
+LATEST_VERSION=$(curl -fsSL "https://api.github.com/repos/${REPO}/releases/latest" \
+    | grep -Po '"tag_name":\s*"\K[^"]+' || echo "unknown")
+
+# Compare et avertit si nouvelle version
+if [ "$LATEST_VERSION" != "unknown" ] && [ "$LATEST_VERSION" != "$LOCAL_VERSION" ]; then
+    echo "🆕 Nouvelle version de git-completion dispo : ${LATEST_VERSION} (actuelle : ${LOCAL_VERSION})"
+    echo "👉 Mets à jour avec : wget -qO- https://raw.githubusercontent.com/${REPO}/main/scripts/install.sh | bash"
+fi
+EOF
+
+chmod +x ~/.git_completion_update.sh
+
+echo -e "${GREEN} Ajout de l'auto update  ${NC}"
+
+# Vérification automatique à l'ouverture de session
+if ! grep -qxF "~/.git_completion_update.sh" "$SHELL_RC"; then
+    echo "~/.git_completion_update.sh" >> "$SHELL_RC"
+    echo -e "${GREEN}Ajout de la vérification de mise à jour à l'ouverture de session${NC}"
+fi
+
+# Écrit la version actuelle (si tag ou défaut)
+CURRENT_VERSION=$(curl -fsSL "https://api.github.com/repos/CultureLinux/git_bash/releases/latest" \
+    | grep -Po '"tag_name":\s*"\K[^"]+' || echo "dev")
+echo "$CURRENT_VERSION" > ~/.git_completion_version
