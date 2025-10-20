@@ -4,7 +4,7 @@
   <img src="https://github.com/CultureLinux/git_bash/blob/main/docs/git_completion.png" alt="git_bash" style="width: 50%; max-width: 200px;"/>
 </p>
 
-Ce script Bash/Zsh fournit une **autocomplétion personnalisée** pour l'alias `g.c` qui execute `git add . && git commit -m `, afin de faciliter la saisie des messages de commit avec emojis et types prédéfinis (feat, fix, docs, etc.).
+Ce script Bash/Zsh fournit des alias git ainsi qu'une **autocomplétion personnalisée** pour l'alias `g.c` et `gc` qui execute `git add . && git commit -m` ou `git commit -m`, afin de faciliter la saisie des messages de commit avec emojis et types prédéfinis (feat, fix, docs, etc.).
 
 Il ajoute automatiquement un guillemet ouvrant `"` en début de message pour préparer la saisie du texte.
 
@@ -18,6 +18,23 @@ Il ajoute automatiquement un guillemet ouvrant `"` en début de message pour pr�
 - Tri alphabétique des suggestions pour retrouver rapidement le type souhaité.
 - Compatible avec **Bash** et **Zsh**.
 - Guillemet ouvrant ajouté automatiquement pour chaque suggestion.
+- Mise à jour automatique pour les prochaines releases (uniquement en mode utilisateur).
+
+## Alias
+
+```
+alias gs='git status'
+alias g.='git add . -A'
+alias g.c='git add . -A && git commit -m'
+alias gba='git branch -a'
+alias gc='git commit -m'
+alias gcout='git checkout'
+alias gdu='git diff @{upstream}'
+alias gfd='git fetch --dry-run'
+alias glog='git log --stat --pretty=short --graph'
+alias glr='git remote -v'
+alias glt='git tag'
+```
 
 ---
 
@@ -38,5 +55,5 @@ Ajout l'autocomplétion pour tous les utilisateurs du système.
 #### Bash
 
 ```bash
-sudo cp .git_completion /etc/bash_completion.d/git_completion
+sudo cp git_completion /etc/bash_completion.d/git_completion
 ```
