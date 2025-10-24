@@ -1,17 +1,56 @@
-# Override 
+##############################
+# Alias basiques
+##############################
+
 alias gs='git status'
 alias g.='git add . -A'
 alias g.c='git add . -A && git commit -m'
-alias gba='git branch -a'
 alias gc='git commit -m'
+
+alias gm='git merge'
+alias gmf='git merge --no-ff'
+
+alias gba='git branch -a'
+
 alias gcout='git checkout'
+alias gsw='git switch'
+alias gswc='git switch -c'
+
 alias gdu='git diff @{upstream}'
 alias gfd='git fetch --dry-run'
-alias glog='git log --stat --pretty=short --graph'
+
+alias glog='git log --stat --pretty=format:"%h %s %d" --graph'
 alias glr='git remote -v'
 alias glt='git tag'
 
+##############################
+# Fonctions
+##############################
 
+# function git-clean-gone() {
+    local branches
+    branches=$(git branch -vv | grep ': gone]' | awk '{print $1}')
+    
+    if [ -z "$branches" ]; then
+        echo "Aucune branche locale morte trouvée. 😎"
+        return
+    fi
+
+    echo "⚠️ Branches locales sans remote détectées :"
+    echo "$branches"
+    echo
+    read -p "Es-tu sûr de vouloir supprimer toutes ces branches ? (yes/no) : " confirm
+
+    if [ "$confirm" = "yes" ]; then
+        echo "$branches" | xargs git branch -D
+        echo "Branches supprimées 💀"
+    else
+        echo "Rien n'a été supprimé 👍"
+    fi
+}
+
+# Alias pratique
+alias gcgone='git-clean-gone'
 
 # Fonction de complétion personnalisée pour g.c
 _gc_completion() {
