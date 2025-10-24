@@ -11,6 +11,7 @@ alias gm='git merge'
 alias gmf='git merge --no-ff'
 
 alias gba='git branch -a'
+alias gbgone='git fetch -p && git-clean-gone'
 
 alias gcout='git checkout'
 alias gsw='git switch'
@@ -27,7 +28,7 @@ alias glt='git tag'
 # Fonctions
 ##############################
 
-# function git-clean-gone() {
+function git-clean-gone() {
     local branches
     branches=$(git branch -vv | grep ': gone]' | awk '{print $1}')
     
@@ -48,9 +49,6 @@ alias glt='git tag'
         echo "Rien n'a été supprimé 👍"
     fi
 }
-
-# Alias pratique
-alias gcgone='git-clean-gone'
 
 # Fonction de complétion personnalisée pour g.c
 _gc_completion() {
@@ -73,7 +71,7 @@ _gc_completion() {
         "🎨 improve: "
         "🎉 init: "
         "⚡ perf: "
-        "🔥 remove: "
+        "🗑️ remove: "
         "♻️ refactor: "
         "⏪ revert: "
         "🔒 security: "
@@ -84,7 +82,7 @@ _gc_completion() {
         "⬆️ update: "
         "🚧 wip: "
         "🔨 chore: "
-        "🛠 hotfix: "
+        "🔥 hotfix: "
         "🌐 i18n: "
         "📈 benchmark: "
     )
