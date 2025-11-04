@@ -29,7 +29,6 @@ alias glt='git tag'
 ##############################
 
 function git-clean-gone() {
-    local branches
     branches=$(git branch -vv | grep ': gone]' | awk '{print $1}')
     
     if [ -z "$branches" ]; then
@@ -126,3 +125,10 @@ _gc_completion() {
 # Associe la fonction de complétion à votre alias
 complete -o nospace -F _gc_completion g.c
 complete -o nospace -F _gc_completion gc
+
+info() { echo "ℹ️  $1"; }
+
+# À la fin du fichier, après les `complete` :
+if [[ ${BASH_SOURCE[0]} == "$HOME/.bashrc" ]]; then
+    info "Autocomplétion Git chargée correctement ✅"
+fi
