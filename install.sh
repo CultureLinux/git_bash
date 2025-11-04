@@ -22,7 +22,7 @@ echo -e "${GREEN}==> Installation ou mise à jour de l'autocomplétion Git...${N
 # Téléchargement du git_completion
 TMP_FILE=$(mktemp)
 wget -qO "$TMP_FILE" "${RAW_URL}/git_completion"
-cp "$TMP_FILE" "$GIT_COMPLETION"
+cp -v "$TMP_FILE" "$GIT_COMPLETION"
 rm -f "$TMP_FILE"
 
 # Détection du shell
@@ -60,7 +60,7 @@ chmod +x "$UPDATE_SCRIPT"
 
 # --- Ajout au shell RC ---
 if ! grep -qxF "$UPDATE_SCRIPT" "$SHELL_RC"; then
-    echo "$UPDATE_SCRIPT" >> "$SHELL_RC"
+    echo "bash $UPDATE_SCRIPT" >> "$SHELL_RC"
     echo -e "${GREEN}Ajout de la vérification de mise à jour à l'ouverture de session${NC}"
 fi
 
