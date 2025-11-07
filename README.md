@@ -55,5 +55,6 @@ Ajout l'autocomplétion pour tous les utilisateurs du système.
 #### Bash
 
 ```bash
-sudo cp git_completion /etc/bash_completion.d/git_completion
+sudo dnf install bash-completion
+sudo wget -O /etc/bash_completion.d/git_completion https://raw.githubusercontent.com/CultureLinux/git_bash/refs/heads/main/git_completion
 ```
